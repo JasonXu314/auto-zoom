@@ -12,10 +12,9 @@ const Home: React.FC = () => {
 	const [name, setName] = useState<string>('');
 	const [err, setErr] = useState<string>('');
 	const [weekday, setWeekday] = useState<number>(new Date().getDay());
-	const [currentDay, setCurrentDay] = useState<number>(new Date().getDate());
 
 	useEffect(() => {
-		setMeetings(JSON.parse(localStorage.getItem('meetings')) as Meeting[]);
+		setMeetings(JSON.parse(localStorage.getItem('meetings')!) as Meeting[]);
 	}, []);
 
 	useEffect(() => {
