@@ -1,0 +1,20 @@
+.main {
+	display: grid;
+	grid-template-columns: 5fr 4fr 1fr;
+	padding: 0.4em;
+	border: 1px solid black;
+
+	.delete {
+		color: #d03420;
+		border-radius: 4px;
+		background-color: #cfcfcf;
+		border: 2px solid black;
+
+		&:hover {
+			color: white;
+			background-color: red;
+			transition: all 250ms linear;
+			cursor: pointer;
+		}
+	}
+}

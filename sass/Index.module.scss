@@ -1,0 +1,71 @@
+.main {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+
+	.form {
+		margin: auto;
+		margin-top: 5em;
+
+		.AMPM {
+			font-size: large;
+		}
+
+		.weekday {
+			font-size: large;
+		}
+
+		.time {
+			text-align: center;
+			margin-top: 0em;
+
+			h4 {
+				display: inline;
+			}
+		}
+
+		.newmeeting {
+			margin: auto;
+			display: block;
+			margin-top: 2em;
+			width: 10em;
+			height: 3em;
+			border: 2px solid black;
+			border-radius: 2px;
+			color: rgb(57, 57, 177);
+			&:hover {
+				color: white;
+				background-color: rgb(57, 57, 177);
+				transition: all 250ms linear;
+				cursor: pointer;
+			}
+		}
+
+		.label {
+			font-size: x-large;
+			text-align: center;
+			margin-top: 2em;
+			margin-bottom: 0.25em;
+		}
+
+		.input {
+			font-size: large;
+		}
+
+		.num {
+			width: 2ch;
+			&::-webkit-inner-spin-button,
+			&::-webkit-outer-spin-button {
+				-webkit-appearance: none;
+				margin: 0;
+			}
+		}
+
+		.err {
+			color: red;
+		}
+	}
+
+	.heading {
+		text-align: center;
+	}
+}

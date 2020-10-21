@@ -1,3 +1,5 @@
+type AMPM = 'AM' | 'PM';
+
 interface Meeting {
 	url: string;
 	time: Time;
@@ -7,4 +9,5 @@ interface Meeting {
 interface Time {
 	hour: number;
 	minute: number;
+	weekday: number;
 }
