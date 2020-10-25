@@ -31,7 +31,7 @@ const ZoomLink: React.FC<Props> = ({ meeting: { url, time, name }, del }) => {
 	useEffect(() => {
 		if (armed) {
 			const interval = setInterval(() => {
-				if (!inPast(time.minute, time.hour)) {
+				if (inPast(time.minute, time.hour)) {
 					const newWindow = window.open(url, '_blank');
 					if (!newWindow) {
 						alert('Unable to auto-start');
