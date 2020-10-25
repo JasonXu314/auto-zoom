@@ -6,21 +6,19 @@ interface Props {
 	del: () => void;
 }
 
+const inPast = (minute: number, hour: number) => {
+	return new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hour, minute).valueOf() < Date.now();
+};
+
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const ZoomLink: React.FC<Props> = ({ meeting: { url, time, name }, del }) => {
-	const [armed, setArmed] = useState<boolean>(new Date().getDay() === time.weekday);
+	const [armed, setArmed] = useState<boolean>(new Date().getDay() === time.weekday && !inPast(time.minute, time.hour));
 	const timeString = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), time.hour, time.minute).toLocaleTimeString();
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			const day = new Date().getDate();
-			const month = new Date().getMonth();
-			const year = new Date().getFullYear();
-			const target = new Date(year, month, day, time.hour, time.minute).valueOf();
-			const now = Date.now();
-
-			if (new Date().getDay() === time.weekday && !armed && now < target) {
+			if (new Date().getDay() === time.weekday && !armed && !inPast(time.minute, time.hour)) {
 				setArmed(true);
 			}
 		}, 60000);
@@ -32,16 +30,8 @@ const ZoomLink: React.FC<Props> = ({ meeting: { url, time, name }, del }) => {
 
 	useEffect(() => {
 		if (armed) {
-			const day = new Date().getDate();
-			const month = new Date().getMonth();
-			const year = new Date().getFullYear();
-
-			const target = new Date(year, month, day, time.hour, time.minute).valueOf();
-
 			const interval = setInterval(() => {
-				const now = Date.now();
-
-				if (now > target) {
+				if (!inPast(time.minute, time.hour)) {
 					const newWindow = window.open(url, '_blank');
 					if (!newWindow) {
 						alert('Unable to auto-start');
@@ -57,7 +47,7 @@ const ZoomLink: React.FC<Props> = ({ meeting: { url, time, name }, del }) => {
 	}, [armed]);
 
 	return (
-		<div className={styles.main + (armed ? ' ' + styles.active : '')}>
+		<div className={styles.main}>
 			<label className={styles.toggle + (armed ? ' ' + styles.checked : '')}>
 				<input
 					type="checkbox"
@@ -68,11 +58,11 @@ const ZoomLink: React.FC<Props> = ({ meeting: { url, time, name }, del }) => {
 				/>
 				<span />
 			</label>
-			<div className={styles.meetingText + (armed ? ' ' + styles.active : '')}>
-				Meeting {name} at {timeString.slice(0, timeString.length - 6) + timeString.slice(timeString.length - 3) + ' '}
+			<div>
+				{name} at {timeString.slice(0, timeString.length - 6) + timeString.slice(timeString.length - 3) + ' '}
 				on {weekdays[time.weekday]}
 			</div>
-			<a className={armed ? styles.active : ''} href={url} target="_blank" rel="noreferrer noopener" onClick={() => setArmed(false)}>
+			<a className={styles.link} href={url} target="_blank" rel="noreferrer noopener" onClick={() => setArmed(false)}>
 				Join Manually
 			</a>
 			<button className={styles.delete} onClick={() => del()}>

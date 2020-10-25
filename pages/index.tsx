@@ -27,11 +27,12 @@ const Home: React.FC = () => {
 				<title>Zoom Zoom</title>
 			</Head>
 			<div className={styles.form}>
-				<div>
+				<h2 className={styles.formHeader}>New Meeting</h2>
+				<div className={styles.field}>
 					<h4 className={styles.label}>Name</h4>
 					<input className={styles.input} onChange={(evt) => setName(evt.target.value)} value={name} />
 				</div>
-				<div>
+				<div className={styles.field}>
 					<h4 className={styles.label}>Url</h4>
 					<input className={styles.input} onChange={(evt) => setUrl(evt.target.value)} value={url} />
 				</div>
@@ -81,7 +82,7 @@ const Home: React.FC = () => {
 				</div>
 				<div className={styles.err}>{err}</div>
 				<button
-					className={styles.newmeeting}
+					className={styles.newMeeting}
 					onClick={() => {
 						if (name !== '' && url !== '') {
 							setMeetings([...meetings, { url, time: { hour: ampm === 'PM' ? hour + 12 : hour, minute, weekday }, name }]);
@@ -100,6 +101,12 @@ const Home: React.FC = () => {
 			</div>
 			<div className={styles.list}>
 				<h1 className={styles.heading}>Scheduled Zooms</h1>
+				<div className={styles.labels}>
+					<div>Active</div>
+					<div>Details</div>
+					<div>Link</div>
+					<div>Delete</div>
+				</div>
 				{meetings.map((meeting, i) => (
 					<ZoomLink key={i} meeting={meeting} del={() => setMeetings(meetings.filter((_, idx) => i !== idx))} />
 				))}

@@ -5,6 +5,14 @@
 	.form {
 		margin: auto;
 		margin-top: 5em;
+		border-radius: 5px;
+		padding: 1em;
+
+		.formHeader {
+			text-align: center;
+			font-size: xx-large;
+			padding-bottom: 0;
+		}
 
 		.AMPM {
 			font-size: large;
@@ -23,15 +31,16 @@
 			}
 		}
 
-		.newmeeting {
+		.newMeeting {
 			margin: auto;
 			display: block;
 			margin-top: 2em;
-			width: 10em;
-			height: 3em;
-			border: 2px solid black;
-			border-radius: 2px;
+			padding: 0.5em 1em;
+			border: 1px solid black;
+			border-radius: 4px;
 			color: rgb(57, 57, 177);
+			transition: all 250ms linear;
+
 			&:hover {
 				color: white;
 				background-color: rgb(57, 57, 177);
@@ -49,10 +58,15 @@
 
 		.input {
 			font-size: large;
+			width: 100%;
+			box-sizing: border-box;
+			border-radius: 2px;
+			border: 1px solid black;
 		}
 
 		.num {
-			width: 2ch;
+			width: 3ch;
+
 			&::-webkit-inner-spin-button,
 			&::-webkit-outer-spin-button {
 				-webkit-appearance: none;
@@ -67,5 +81,13 @@
 
 	.heading {
 		text-align: center;
+	}
+
+	.list {
+		.labels {
+			display: grid;
+			grid-template-columns: 2fr 5fr 2fr 1fr;
+			padding-left: 2em;
+		}
 	}
 }
