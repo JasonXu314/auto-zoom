@@ -14,7 +14,7 @@ const Home: React.FC = () => {
 	const [weekday, setWeekday] = useState<number>(new Date().getDay());
 
 	useEffect(() => {
-		setMeetings(JSON.parse(localStorage.getItem('meetings')!) as Meeting[]);
+		setMeetings(JSON.parse(localStorage.getItem('meetings') || '[]') as Meeting[]);
 	}, []);
 
 	useEffect(() => {
