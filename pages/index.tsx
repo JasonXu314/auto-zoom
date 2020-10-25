@@ -24,7 +24,7 @@ const Home: React.FC = () => {
 	return (
 		<div className={styles.main}>
 			<Head>
-				<title>Zoom Zoom</title>
+				<title>Auto-Zoom</title>
 			</Head>
 			<div className={styles.form}>
 				<h2 className={styles.formHeader}>New Meeting</h2>
