@@ -85,7 +85,10 @@ const Home: React.FC = () => {
 					className={styles.newMeeting}
 					onClick={() => {
 						if (name !== '' && url !== '') {
-							setMeetings([...meetings, { url, time: { hour: ampm === 'PM' ? hour + 12 : hour, minute, weekday }, name }]);
+							setMeetings([
+								...meetings,
+								{ url, time: { hour: ampm === 'PM' ? (hour === 12 ? hour : hour + 12) : hour === 12 ? 0 : hour, minute, weekday }, name }
+							]);
 							setName('');
 							setUrl('');
 							setHour(10);
