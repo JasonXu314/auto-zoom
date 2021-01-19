@@ -4,6 +4,7 @@ interface Meeting {
 	url: string;
 	time: Time;
 	name: string;
+	armed: boolean;
 }
 
 interface Time {

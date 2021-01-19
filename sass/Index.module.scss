@@ -86,8 +86,16 @@
 	.list {
 		.labels {
 			display: grid;
-			grid-template-columns: 2fr 5fr 2fr 1fr;
+			grid-template-columns: 0.3fr 2fr 5fr 2fr 1fr;
 			padding-left: 2em;
+		}
+
+		h4 {
+			margin: 0.5em;
+		}
+
+		.noMeeting {
+			margin: 0.25em 2em;
 		}
 	}
 }

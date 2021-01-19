@@ -4,8 +4,12 @@
 	padding: 0.4em;
 	border: 1px solid black;
 
+	&.notFirst {
+		border-top: none;
+	}
+
 	.link {
-		color: black;
+		color: blue;
 		text-decoration: none;
 		width: fit-content;
 
@@ -20,6 +24,7 @@
 		background-color: white;
 		border: 1px solid black;
 		border: none;
+		margin: 0 1em;
 
 		&:hover {
 			color: white;

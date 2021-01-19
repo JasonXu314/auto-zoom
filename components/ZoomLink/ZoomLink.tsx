@@ -1,42 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from './ZoomLink.module.scss';
 
 interface Props {
 	meeting: Meeting;
 	del: () => void;
+	setArmed: (armed: boolean) => void;
+	firstChild: boolean;
 }
 
-const inPast = (minute: number, hour: number) => {
-	return new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hour, minute).valueOf() < Date.now();
-};
+function closeEnough(target: Time): boolean {
+	const now = new Date();
+	return now.getDay() === target.weekday && now.getHours() === target.hour && now.getMinutes() === target.minute;
+}
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const ZoomLink: React.FC<Props> = ({ meeting: { url, time, name }, del }) => {
-	const [armed, setArmed] = useState<boolean>(new Date().getDay() === time.weekday && !inPast(time.minute, time.hour));
+const ZoomLink: React.FC<Props> = ({ meeting: { url, time, name, armed }, del, setArmed, firstChild }) => {
 	const timeString = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), time.hour, time.minute).toLocaleTimeString();
-
-	useEffect(() => {
-		const interval = setInterval(() => {
-			if (new Date().getDay() === time.weekday && !armed && !inPast(time.minute, time.hour)) {
-				setArmed(true);
-			}
-		}, 60000);
-
-		return () => {
-			clearInterval(interval);
-		};
-	}, [time.weekday, armed]);
 
 	useEffect(() => {
 		if (armed) {
 			const interval = setInterval(() => {
-				if (inPast(time.minute, time.hour)) {
+				if (closeEnough(time)) {
 					const newWindow = window.open(url, '_blank');
 					if (!newWindow) {
-						alert('Unable to auto-start');
+						alert(`Unable to auto-start meeting ${name}`);
 					}
-					setArmed(false);
 				}
 			}, 60000);
 
@@ -47,11 +36,11 @@ const ZoomLink: React.FC<Props> = ({ meeting: { url, time, name }, del }) => {
 	}, [armed]);
 
 	return (
-		<div className={styles.main}>
+		<div className={styles.main + (firstChild ? '' : ' ' + styles.notFirst)}>
 			<label className={styles.toggle + (armed ? ' ' + styles.checked : '')}>
 				<input
 					type="checkbox"
-					onClick={() => {
+					onChange={() => {
 						setArmed(!armed);
 					}}
 					checked={armed}

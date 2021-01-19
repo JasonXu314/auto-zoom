@@ -1,7 +1,22 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ZoomLink from '../components/ZoomLink/ZoomLink';
 import styles from '../sass/Index.module.scss';
+import { compareDates } from '../utils/utils';
+
+const makeMeeting = (i: number, meeting: Meeting, setMeetings: React.Dispatch<React.SetStateAction<Meeting[]>>, meetings: Meeting[]) => {
+	return (
+		<ZoomLink
+			key={i}
+			meeting={meeting}
+			del={() => setMeetings(meetings.filter((_, idx) => i !== idx))}
+			setArmed={(armed) => {
+				setMeetings(meetings.map((prevMeeting, idx) => (idx === i ? { ...prevMeeting, armed } : { ...prevMeeting })));
+			}}
+			firstChild={i === 0}
+		/>
+	);
+};
 
 const Home: React.FC = () => {
 	const [meetings, setMeetings] = useState<Meeting[]>([]);
@@ -12,6 +27,19 @@ const Home: React.FC = () => {
 	const [name, setName] = useState<string>('');
 	const [err, setErr] = useState<string>('');
 	const [weekday, setWeekday] = useState<number>(new Date().getDay());
+	const sortedMeetings = useMemo(() => meetings.sort((ma, mb) => compareDates(ma.time, mb.time)), [meetings]);
+	const todayIndex = useMemo(() => sortedMeetings.findIndex((meeting) => meeting.time.weekday !== new Date().getDay()), [sortedMeetings]);
+	const tomorrowIndex = useMemo(
+		() => sortedMeetings.findIndex((meeting) => meeting.time.weekday > new Date().getDay() + 1 || meeting.time.weekday < new Date().getDay()),
+		[sortedMeetings]
+	);
+	const todayMeetings = useMemo(() => (todayIndex === -1 ? [] : sortedMeetings.slice(0, todayIndex)), [sortedMeetings, todayIndex]);
+	const tomorrowMeetings = useMemo(() => (tomorrowIndex === -1 ? [] : sortedMeetings.slice(todayIndex, tomorrowIndex)), [
+		todayIndex,
+		tomorrowIndex,
+		sortedMeetings
+	]);
+	const futureMeetings = useMemo(() => (tomorrowIndex === -1 ? [] : sortedMeetings.slice(tomorrowIndex)), [sortedMeetings, tomorrowIndex]);
 
 	useEffect(() => {
 		setMeetings(JSON.parse(localStorage.getItem('meetings') || '[]') as Meeting[]);
@@ -87,7 +115,12 @@ const Home: React.FC = () => {
 						if (name !== '' && url !== '') {
 							setMeetings([
 								...meetings,
-								{ url, time: { hour: ampm === 'PM' ? (hour === 12 ? hour : hour + 12) : hour === 12 ? 0 : hour, minute, weekday }, name }
+								{
+									url,
+									time: { hour: ampm === 'PM' ? (hour === 12 ? hour : hour + 12) : hour === 12 ? 0 : hour, minute, weekday },
+									name,
+									armed: true
+								}
 							]);
 							setName('');
 							setUrl('');
@@ -103,16 +136,27 @@ const Home: React.FC = () => {
 				</button>
 			</div>
 			<div className={styles.list}>
-				<h1 className={styles.heading}>Scheduled Zooms</h1>
-				<div className={styles.labels}>
-					<div>Active</div>
-					<div>Details</div>
-					<div>Link</div>
-					<div>Delete</div>
+				<div className={styles.list}>
+					<h1 className={styles.heading}>Scheduled Zooms</h1>
+					<h4>Today</h4>
+					{todayMeetings.length !== 0 ? (
+						todayMeetings.map((meeting, i) => makeMeeting(i, meeting, setMeetings, meetings))
+					) : (
+						<h5 className={styles.noMeeting}>No Meetings Today!</h5>
+					)}
+					<h4>Tomorrow</h4>
+					{tomorrowMeetings.length !== 0 ? (
+						tomorrowMeetings.map((meeting, i) => makeMeeting(i, meeting, setMeetings, meetings))
+					) : (
+						<h5 className={styles.noMeeting}>No Meetings Tomorrow!</h5>
+					)}
+					<h4>Later this Week</h4>
+					{futureMeetings.length !== 0 ? (
+						futureMeetings.map((meeting, i) => makeMeeting(i, meeting, setMeetings, meetings))
+					) : (
+						<h5 className={styles.noMeeting}>No Meetings for this week!</h5>
+					)}
 				</div>
-				{meetings.map((meeting, i) => (
-					<ZoomLink key={i} meeting={meeting} del={() => setMeetings(meetings.filter((_, idx) => i !== idx))} />
-				))}
 			</div>
 		</div>
 	);
