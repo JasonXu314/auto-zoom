@@ -33,13 +33,13 @@ const Home: React.FC = () => {
 		() => sortedMeetings.findIndex((meeting) => meeting.time.weekday > new Date().getDay() + 1 || meeting.time.weekday < new Date().getDay()),
 		[sortedMeetings]
 	);
-	const todayMeetings = useMemo(() => (todayIndex === -1 ? [] : sortedMeetings.slice(0, todayIndex)), [sortedMeetings, todayIndex]);
-	const tomorrowMeetings = useMemo(() => (tomorrowIndex === -1 ? [] : sortedMeetings.slice(todayIndex, tomorrowIndex)), [
+	const todayMeetings = useMemo(() => (todayIndex === -1 ? sortedMeetings : sortedMeetings.slice(0, todayIndex)), [sortedMeetings, todayIndex]);
+	const tomorrowMeetings = useMemo(() => (tomorrowIndex === -1 ? sortedMeetings : sortedMeetings.slice(todayIndex, tomorrowIndex)), [
 		todayIndex,
 		tomorrowIndex,
 		sortedMeetings
 	]);
-	const futureMeetings = useMemo(() => (tomorrowIndex === -1 ? [] : sortedMeetings.slice(tomorrowIndex)), [sortedMeetings, tomorrowIndex]);
+	const futureMeetings = useMemo(() => (tomorrowIndex === -1 ? sortedMeetings : sortedMeetings.slice(tomorrowIndex)), [sortedMeetings, tomorrowIndex]);
 
 	useEffect(() => {
 		setMeetings(JSON.parse(localStorage.getItem('meetings') || '[]') as Meeting[]);
