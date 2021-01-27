@@ -34,12 +34,11 @@ const Home: React.FC = () => {
 		[sortedMeetings]
 	);
 	const todayMeetings = useMemo(() => (todayIndex === -1 ? sortedMeetings : sortedMeetings.slice(0, todayIndex)), [sortedMeetings, todayIndex]);
-	const tomorrowMeetings = useMemo(() => (tomorrowIndex === -1 ? sortedMeetings : sortedMeetings.slice(todayIndex, tomorrowIndex)), [
-		todayIndex,
-		tomorrowIndex,
-		sortedMeetings
-	]);
-	const futureMeetings = useMemo(() => (tomorrowIndex === -1 ? sortedMeetings : sortedMeetings.slice(tomorrowIndex)), [sortedMeetings, tomorrowIndex]);
+	const tomorrowMeetings = useMemo(
+		() => (tomorrowIndex === -1 ? (todayIndex === -1 ? [] : sortedMeetings.slice(todayIndex)) : sortedMeetings.slice(todayIndex, tomorrowIndex)),
+		[todayIndex, tomorrowIndex, sortedMeetings]
+	);
+	const futureMeetings = useMemo(() => (tomorrowIndex === -1 ? [] : sortedMeetings.slice(tomorrowIndex)), [sortedMeetings, tomorrowIndex]);
 
 	useEffect(() => {
 		setMeetings(JSON.parse(localStorage.getItem('meetings') || '[]') as Meeting[]);
@@ -66,32 +65,27 @@ const Home: React.FC = () => {
 				</div>
 				<h4 className={styles.label}>Time</h4>
 				<div className={styles.time}>
-					<input
-						type="number"
-						className={`${styles.num} ${styles.input}`}
-						min={1}
-						max={12}
-						onChange={(evt) => setHour(parseInt(evt.target.value))}
-						value={hour}
-					/>
-					:
-					<input
-						type="number"
-						className={`${styles.num} ${styles.input}`}
-						min={0}
-						max={59}
-						onChange={(evt) => setMinute(parseInt(evt.target.value))}
-						value={minute}
-					/>
-					<select
-						className={styles.AMPM}
-						onChange={(evt) => {
-							setAMPM(evt.target.value as AMPM);
-						}}
-						value={ampm}>
-						<option value="AM">AM</option>
-						<option value="PM">PM</option>
-					</select>
+					<div className={styles.row}>
+						<select onChange={(evt) => setHour(parseInt(evt.target.value))} value={hour}>
+							{new Array(12).fill(null).map((_, i) => (
+								<option value={i + 1} key={i}>
+									{i + 1}
+								</option>
+							))}
+						</select>
+						:
+						<select onChange={(evt) => setMinute(parseInt(evt.target.value))} value={minute}>
+							{new Array(60).fill(null).map((_, i) => (
+								<option value={i} key={i}>
+									{i.toString().length < 2 ? '0' + i : i}
+								</option>
+							))}
+						</select>
+						<select onChange={(evt) => setAMPM(evt.target.value as AMPM)}>
+							<option value="AM">AM</option>
+							<option value="PM">PM</option>
+						</select>
+					</div>
 					<h4> on </h4>
 					<select
 						className={styles.weekday}

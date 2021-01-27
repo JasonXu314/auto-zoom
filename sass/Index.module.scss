@@ -4,7 +4,7 @@
 
 	.form {
 		margin: auto;
-		margin-top: 5em;
+		margin-top: 3em;
 		border-radius: 5px;
 		padding: 1em;
 
@@ -25,6 +25,11 @@
 		.time {
 			text-align: center;
 			margin-top: 0em;
+
+			.row {
+				display: inline-flex;
+				flex-direction: row;
+			}
 
 			h4 {
 				display: inline;

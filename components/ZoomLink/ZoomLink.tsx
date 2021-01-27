@@ -21,6 +21,7 @@ const ZoomLink: React.FC<Props> = ({ meeting: { url, time, name, armed }, del, s
 	useEffect(() => {
 		if (armed) {
 			const interval = setInterval(() => {
+				console.log(closeEnough(time));
 				if (closeEnough(time)) {
 					const newWindow = window.open(url, '_blank');
 					if (!newWindow) {
